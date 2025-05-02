@@ -2,12 +2,16 @@
 module Application
   module UseCases
     class SearchProducts
-      def initialize(product_repository)
-        @product_repository = product_repository
+      def initialize(repository)
+        @repository = repository
       end
 
-      def execute(name: nil)
-        @product_repository.search(name: name)
+      def execute(query = nil)
+        if query.nil? || query.empty?
+          @repository.all_products
+        else
+          @repository.search_products(query)
+        end
       end
     end
   end

@@ -25,6 +25,15 @@ module Interfaces
         rescue => e
           [500, { 'content-type' => 'application/json' }, [{ error: e.message }.to_json]]
         end
+        
+        def call(env)
+          case env['REQUEST_METHOD']
+          when 'POST'
+            create(env)
+          else
+            [405, { 'content-type' => 'application/json' }, [{ error: 'Method not allowed' }.to_json]]
+          end
+        end
       end
     end
   end

@@ -2,8 +2,8 @@
 module Application
   module UseCases
     class CreateProduct
-      def initialize(product_repository)
-        @product_repository = product_repository
+      def initialize(repository)
+        @repository = repository
       end
 
       def execute(name:, description:, price:)
@@ -15,7 +15,7 @@ module Application
             price: price
           )
 
-          created_product = @product_repository.create(product)
+          created_product = @repository.create_product(product)
           puts "Product created: #{created_product.to_h.to_json}"
         end
       end

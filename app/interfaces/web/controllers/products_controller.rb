@@ -28,10 +28,21 @@ module Interfaces
 
         def search(env)
           params = Rack::Utils.parse_query(env['QUERY_STRING'])
-          name = params['name']
+          query = params['query']
 
-          products = @search_products_use_case.execute(name: name)
+          products = @search_products_use_case.execute(query)
           [200, { 'content-type' => 'application/json' }, [products.map(&:to_h).to_json]]
+        end
+        
+        def call(env)
+          case env['REQUEST_METHOD']
+          when 'POST'
+            create(env)
+          when 'GET'
+            search(env)
+          else
+            [405, { 'content-type' => 'application/json' }, [{ error: 'Method not allowed' }.to_json]]
+          end
         end
       end
     end
