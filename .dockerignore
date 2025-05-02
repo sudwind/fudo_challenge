@@ -1,0 +1,13 @@
+.git
+.gitignore
+.ruby-lsp
+.env
+*.md
+docker-compose.yml
+Dockerfile
+.dockerignore
+tmp/
+log/
+.bundle/
+vendor/bundle
+sorbet/rbi/hidden-definitions/ 
