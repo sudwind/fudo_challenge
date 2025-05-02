@@ -12,6 +12,7 @@ require_relative 'app/application/use_cases/create_user'
 require_relative 'app/infrastructure/repositories/in_memory_product_repository'
 require_relative 'app/infrastructure/repositories/in_memory_user_repository'
 require_relative 'app/infrastructure/repositories/postgres_product_repository'
+require_relative 'app/infrastructure/repositories/postgres_user_repository'
 require_relative 'app/infrastructure/repositories/repository_factory'
 require_relative 'app/infrastructure/services/jwt_service'
 require_relative 'app/interfaces/web/controllers/products_controller'
@@ -19,7 +20,7 @@ require_relative 'app/interfaces/web/controllers/users_controller'
 
 # Initialize dependencies
 product_repository = Infrastructure::Repositories::RepositoryFactory.create_product_repository
-user_repository = Infrastructure::Repositories::InMemoryUserRepository.new
+user_repository = Infrastructure::Repositories::RepositoryFactory.create_user_repository
 create_product_use_case = Application::UseCases::CreateProduct.new(product_repository)
 search_products_use_case = Application::UseCases::SearchProducts.new(product_repository)
 create_user_use_case = Application::UseCases::CreateUser.new(user_repository)

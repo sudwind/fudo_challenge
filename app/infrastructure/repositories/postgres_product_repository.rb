@@ -1,19 +1,14 @@
 require 'pg'
 require_relative '../logger'
+require_relative '../config/database_config'
 
 module Infrastructure
   module Repositories
     class PostgresProductRepository < Domain::Repositories::ProductRepository
       def initialize
-        Infrastructure::Logger.logger.info("Connecting to PostgreSQL database...")
-        @connection = PG.connect(
-          dbname: ENV['POSTGRES_DB'] || 'products',
-          user: ENV['POSTGRES_USER'] || 'postgres',
-          password: ENV['POSTGRES_PASSWORD'] || 'postgres',
-          host: ENV['POSTGRES_HOST'] || 'localhost',
-          port: ENV['POSTGRES_PORT'] || 5432
-        )
-        Infrastructure::Logger.logger.info("Successfully connected to PostgreSQL")
+        Infrastructure::Logger.logger.info("Connecting to PostgreSQL database for products...")
+        @connection = PG.connect(Infrastructure::Config::DatabaseConfig.connection_params)
+        Infrastructure::Logger.logger.info("Successfully connected to PostgreSQL for products")
         create_table_if_not_exists
       end
 
@@ -39,17 +34,13 @@ module Infrastructure
         result.map { |row| map_result_to_product(row) }
       end
 
-      def search(name: nil)
-        if name.nil? || name.empty?
-          all
-        else
-          Infrastructure::Logger.logger.debug("Searching products with name: #{name}")
-          result = @connection.exec_params(
-            'SELECT * FROM products WHERE LOWER(name) LIKE LOWER($1)',
-            ["%#{name}%"]
-          )
-          result.map { |row| map_result_to_product(row) }
-        end
+      def search(query)
+        Infrastructure::Logger.logger.debug("Searching products with query: #{query}")
+        result = @connection.exec_params(
+          'SELECT * FROM products WHERE name ILIKE $1',
+          ["%#{query}%"]
+        )
+        result.map { |row| map_result_to_product(row) }
       end
 
       private
