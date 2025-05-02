@@ -1,1 +1,67 @@
+# Ruby specific
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# Logging
+/log/*
+!/log/.keep
+*.log
+
+# Dependencies
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+# Database
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-[0-9]*
+/db/schema.rb
+dump.rdb
+
+# RSpec
+.rspec_status
+/spec/tmp
+
+# Documentation cache and generated files
+/.yardoc/
+/doc/
+/rdoc/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Sorbet
+/sorbet/rbi/hidden-definitions/
+
+# Application specific
+/public/assets
+/public/uploads
+/storage/

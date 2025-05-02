@@ -1,3 +1,4 @@
+# typed: true
 module Application
   module UseCases
     class CreateProduct

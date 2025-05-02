@@ -1,3 +1,4 @@
+# typed: true
 require_relative '../logger'
 require_relative '../config/database_config'
 

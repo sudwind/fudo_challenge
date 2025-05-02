@@ -1,3 +1,4 @@
+# typed: true
 module Domain
   module Repositories
     class ProductRepository

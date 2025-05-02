@@ -1,3 +1,4 @@
+# typed: true
 module Interfaces
   module Web
     module Controllers

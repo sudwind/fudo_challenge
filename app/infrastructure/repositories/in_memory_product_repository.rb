@@ -1,3 +1,4 @@
+# typed: true
 module Infrastructure
   module Repositories
     class InMemoryProductRepository < Domain::Repositories::ProductRepository
