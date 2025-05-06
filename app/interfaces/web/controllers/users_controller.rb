@@ -1,4 +1,6 @@
 # typed: true
+require 'json'
+
 module Interfaces
   module Web
     module Controllers
@@ -49,10 +51,13 @@ module Interfaces
         def call(env)
           case env['REQUEST_METHOD']
           when 'POST'
-            if env['PATH_INFO'] == '/login'
+            case env['PATH_INFO']
+            when '/create'
+              create(env)
+            when '/login'
               login(env)
             else
-              create(env)
+              [404, { 'content-type' => 'application/json' }, [{ error: 'Not found' }.to_json]]
             end
           else
             [405, { 'content-type' => 'application/json' }, [{ error: 'Method not allowed' }.to_json]]

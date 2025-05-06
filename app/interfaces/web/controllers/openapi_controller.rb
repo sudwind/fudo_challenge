@@ -21,7 +21,7 @@ module Interfaces
         private
 
         def serve_specification
-          spec = YAML.load_file('openapi.yaml')
+          spec = YAML.load_file('app/static/openapi.yaml')
           headers = {
             'content-type' => 'application/x-yaml',
             'cache-control' => 'no-store, no-cache, must-revalidate, max-age=0',

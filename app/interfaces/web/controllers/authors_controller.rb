@@ -20,7 +20,7 @@ module Interfaces
         private
 
         def serve_authors
-          content = File.read('AUTHORS')
+          content = File.read('app/static/AUTHORS')
           headers = {
             'content-type' => 'text/plain',
             'cache-control' => 'public, max-age=86400', # 24 hours in seconds
