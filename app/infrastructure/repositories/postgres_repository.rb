@@ -17,11 +17,10 @@ module Infrastructure
       def create_product(product)
         Infrastructure::Logger.logger.debug("Creating product: #{product.to_h}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
-          result = conn.exec_params(
-            'INSERT INTO products (id, name, description, price, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [product.id, product.name, product.description, product.price, product.created_at, product.updated_at]
+          conn.exec_params(
+            'INSERT INTO products (id, name) VALUES ($1, $2)',
+            [product.id, product.name]
           )
-          map_result_to_product(result.first)
         end
       end
 
@@ -91,11 +90,7 @@ module Infrastructure
           conn.exec(<<-SQL)
             CREATE TABLE IF NOT EXISTS products (
               id UUID PRIMARY KEY,
-              name VARCHAR(255) NOT NULL,
-              description TEXT,
-              price DECIMAL(10,2) NOT NULL,
-              created_at TIMESTAMP NOT NULL,
-              updated_at TIMESTAMP NOT NULL
+              name VARCHAR(255) NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS users (
@@ -113,11 +108,7 @@ module Infrastructure
       def map_result_to_product(row)
         Domain::Models::Product.new(
           id: row['id'],
-          name: row['name'],
-          description: row['description'],
-          price: row['price'].to_f,
-          created_at: Time.parse(row['created_at']),
-          updated_at: Time.parse(row['updated_at'])
+          name: row['name']
         )
       end
 

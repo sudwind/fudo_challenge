@@ -6,19 +6,18 @@ module Interfaces
   module Web
     module Controllers
       class ProductsController
-        def initialize(create_product_use_case, search_products_use_case, find_product_use_case)
+        def initialize(create_product_use_case, search_products_use_case, find_product_use_case, list_products_use_case)
           @create_product_use_case = create_product_use_case
           @search_products_use_case = search_products_use_case
           @find_product_use_case = find_product_use_case
+          @list_products_use_case = list_products_use_case
         end
 
         def create(env)
           request_body = JSON.parse(env['rack.input'].read)
           
           result = @create_product_use_case.execute(
-            name: request_body['name'],
-            description: request_body['description'],
-            price: request_body['price']
+            name: request_body['name']
           )
 
           if result[:error]
@@ -58,6 +57,11 @@ module Interfaces
           Helpers::HttpHelper.server_error(e.message)
         end
 
+        def index(env)
+          result = @list_products_use_case.execute
+          Helpers::HttpHelper.ok(result)
+        end
+
         def call(env)
           case env['REQUEST_METHOD']
           when 'POST'
@@ -67,6 +71,8 @@ module Interfaces
               search(env)
             elsif env['PATH_INFO'] =~ %r{^/[0-9a-f-]+$}
               find(env)
+            elsif env['PATH_INFO'] == '' || env['PATH_INFO'] == '/'
+              index(env)
             else
               Helpers::HttpHelper.not_found
             end

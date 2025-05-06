@@ -1,17 +1,17 @@
 # typed: true
+require 'securerandom'
+
 module UseCases
   class CreateProduct
     def initialize(repository)
       @repository = repository
     end
 
-    def execute(name:, description:, price:)
+    def execute(name:)
       Thread.new do
         product = Domain::Models::Product.new(
           id: SecureRandom.uuid,
-          name: name,
-          description: description,
-          price: price
+          name: name
         )
 
         # Sleep for 5 seconds before making the product available
