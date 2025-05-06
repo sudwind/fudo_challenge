@@ -15,6 +15,9 @@ module Application
             price: price
           )
 
+          # Sleep for 5 seconds before making the product available
+          sleep 5
+
           created_product = @repository.create_product(product)
           puts "Product created: #{created_product.to_h.to_json}"
         end

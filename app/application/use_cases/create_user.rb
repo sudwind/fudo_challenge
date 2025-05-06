@@ -22,10 +22,8 @@ module Application
           password_hash: password_hash
         )
 
-        created_user = @repository.create_user(user)
-        token = Infrastructure::Services::JwtService.encode(created_user.id)
-
-        { user: created_user.to_h, token: token }
+        @repository.create_user(user)
+        { message: 'User created successfully' }
       end
     end
   end
