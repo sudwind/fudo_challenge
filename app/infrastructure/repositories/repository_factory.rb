@@ -1,5 +1,5 @@
 # typed: true
-require_relative '../logger'
+require_relative '../services/logger_service'
 require_relative '../config/database_config'
 
 module Infrastructure
@@ -21,7 +21,7 @@ module Infrastructure
 
         def ensure_postgres_logged
           @postgres_logged ||= begin
-            Infrastructure::Logger.logger.info("Using PostgreSQL for data storage")
+            Infrastructure::Services::LoggerService.logger.info("Using PostgreSQL for data storage")
             Infrastructure::Config::DatabaseConfig.log_connection_info
             true
           end
@@ -29,7 +29,7 @@ module Infrastructure
 
         def ensure_in_memory_logged
           @in_memory_logged ||= begin
-            Infrastructure::Logger.logger.info("Using in-memory storage - all data will be lost when the server stops")
+            Infrastructure::Services::LoggerService.logger.info("Using in-memory storage - all data will be lost when the server stops")
             true
           end
         end

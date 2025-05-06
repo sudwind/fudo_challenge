@@ -1,6 +1,6 @@
 # typed: true
 module Domain
-  module Repositories
+  module Interfaces
     class Repository
       # Product methods
       def create_product(product)

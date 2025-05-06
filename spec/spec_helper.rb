@@ -8,11 +8,12 @@ require 'json'
 require 'securerandom'
 require 'jwt'
 require 'bcrypt'
+require 'database_cleaner/active_record'
 
 # Load application files
 require_relative '../app/domain/models/product'
 require_relative '../app/domain/models/user'
-require_relative '../app/domain/repositories/repository'
+require_relative '../app/domain/interfaces/repository'
 require_relative '../app/use_cases/create_product'
 require_relative '../app/use_cases/search_products'
 require_relative '../app/use_cases/find_product'

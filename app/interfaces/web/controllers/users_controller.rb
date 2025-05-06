@@ -1,66 +1,65 @@
 # typed: true
 require 'json'
+require_relative '../../../services/user_service'
+require_relative '../../../services/parse_utils'
+require_relative '../helpers/http_helper'
 
 module Interfaces
   module Web
     module Controllers
       class UsersController
         def initialize(create_user_use_case, user_login_use_case)
-          @create_user_use_case = create_user_use_case
-          @user_login_use_case = user_login_use_case
-        end
-
-        def create(env)
-          request_body = JSON.parse(env['rack.input'].read)
-          
-          result = @create_user_use_case.execute(
-            email: request_body['email'],
-            password: request_body['password']
+          @service = Services::UserService.new(
+            create_user_use_case,
+            user_login_use_case
           )
-
-          if result[:error]
-            [400, { 'content-type' => 'application/json' }, [result.to_json]]
-          else
-            [201, { 'content-type' => 'application/json' }, [result.to_json]]
-          end
-        rescue JSON::ParserError
-          [400, { 'content-type' => 'application/json' }, [{ error: 'Invalid JSON' }.to_json]]
-        rescue => e
-          [500, { 'content-type' => 'application/json' }, [{ error: e.message }.to_json]]
         end
 
-        def login(env)
-          request_body = JSON.parse(env['rack.input'].read)
-          
-          result = @user_login_use_case.execute(
-            email: request_body['email'],
-            password: request_body['password']
-          )
-
-          if result[:error]
-            [401, { 'content-type' => 'application/json' }, [result.to_json]]
-          else
-            [200, { 'content-type' => 'application/json' }, [result.to_json]]
-          end
-        rescue JSON::ParserError
-          [400, { 'content-type' => 'application/json' }, [{ error: 'Invalid JSON' }.to_json]]
-        rescue => e
-          [500, { 'content-type' => 'application/json' }, [{ error: e.message }.to_json]]
-        end
-        
         def call(env)
           case env['REQUEST_METHOD']
           when 'POST'
-            case env['PATH_INFO']
-            when '/create'
-              create(env)
-            when '/login'
-              login(env)
-            else
-              [404, { 'content-type' => 'application/json' }, [{ error: 'Not found' }.to_json]]
-            end
+            handle_post_request(env)
           else
-            [405, { 'content-type' => 'application/json' }, [{ error: 'Method not allowed' }.to_json]]
+            Helpers::HttpHelper.method_not_allowed
+          end
+        rescue ArgumentError => e
+          Helpers::HttpHelper.bad_request(e.message)
+        rescue => e
+          Helpers::HttpHelper.server_error(e.message)
+        end
+
+        private
+
+        def handle_post_request(env)
+          case env['PATH_INFO']
+          when '/create'
+            handle_create_request(env)
+          when '/login'
+            handle_login_request(env)
+          else
+            Helpers::HttpHelper.not_found
+          end
+        end
+
+        def handle_create_request(env)
+          request_body = Services::ParseUtils.parse_rack_input(env)
+          result = @service.create_user(request_body: request_body)
+
+          if result[:error]
+            Helpers::HttpHelper.bad_request(result[:error])
+          else
+            Helpers::HttpHelper.created(result)
+          end
+        end
+
+        def handle_login_request(env)
+          request_body = Services::ParseUtils.parse_rack_input(env)
+          result = @service.login_user(request_body: request_body)
+
+          if result[:error]
+            Helpers::HttpHelper.unauthorized
+          else
+            Helpers::HttpHelper.ok(result)
           end
         end
       end

@@ -1,21 +1,21 @@
 # typed: true
 require 'pg'
-require_relative '../logger'
+require_relative '../services/logger_service'
 require_relative '../config/database_config'
 require_relative '../database/connection_manager'
-require_relative '../../domain/repositories/repository'
+require_relative '../../domain/interfaces/repository'
 
 module Infrastructure
   module Repositories
-    class PostgresRepository < Domain::Repositories::Repository
+    class PostgresRepository < Domain::Interfaces::Repository
       def initialize
-        Infrastructure::Logger.logger.info("Initializing PostgreSQL repository...")
+        Infrastructure::Services::LoggerService.logger.info("Initializing PostgreSQL repository...")
         create_tables_if_not_exist
       end
 
       # Product methods
       def create_product(product)
-        Infrastructure::Logger.logger.debug("Creating product: #{product.to_h}")
+        Infrastructure::Services::LoggerService.logger.debug("Creating product: #{product.to_h}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           conn.exec_params(
             'INSERT INTO products (id, name) VALUES ($1, $2)',
@@ -25,7 +25,7 @@ module Infrastructure
       end
 
       def find_product(id)
-        Infrastructure::Logger.logger.debug("Finding product with id: #{id}")
+        Infrastructure::Services::LoggerService.logger.debug("Finding product with id: #{id}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec_params('SELECT * FROM products WHERE id = $1', [id])
           return nil if result.ntuples.zero?
@@ -34,7 +34,7 @@ module Infrastructure
       end
 
       def all_products
-        Infrastructure::Logger.logger.debug("Fetching all products")
+        Infrastructure::Services::LoggerService.logger.debug("Fetching all products")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec('SELECT * FROM products')
           result.map { |row| map_result_to_product(row) }
@@ -42,7 +42,7 @@ module Infrastructure
       end
 
       def search_products(query)
-        Infrastructure::Logger.logger.debug("Searching products with query: #{query}")
+        Infrastructure::Services::LoggerService.logger.debug("Searching products with query: #{query}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec_params(
             'SELECT * FROM products WHERE name ILIKE $1',
@@ -54,7 +54,7 @@ module Infrastructure
 
       # User methods
       def create_user(user)
-        Infrastructure::Logger.logger.debug("Creating user: #{user.to_h}")
+        Infrastructure::Services::LoggerService.logger.debug("Creating user: #{user.to_h}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec_params(
             'INSERT INTO users (id, email, password_hash, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -65,7 +65,7 @@ module Infrastructure
       end
 
       def find_user(id)
-        Infrastructure::Logger.logger.debug("Finding user with id: #{id}")
+        Infrastructure::Services::LoggerService.logger.debug("Finding user with id: #{id}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec_params('SELECT * FROM users WHERE id = $1', [id])
           return nil if result.ntuples.zero?
@@ -74,7 +74,7 @@ module Infrastructure
       end
 
       def find_user_by_email(email)
-        Infrastructure::Logger.logger.debug("Finding user with email: #{email}")
+        Infrastructure::Services::LoggerService.logger.debug("Finding user with email: #{email}")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           result = conn.exec_params('SELECT * FROM users WHERE email = $1', [email])
           return nil if result.ntuples.zero?
@@ -85,7 +85,7 @@ module Infrastructure
       private
 
       def create_tables_if_not_exist
-        Infrastructure::Logger.logger.info("Ensuring database tables exist...")
+        Infrastructure::Services::LoggerService.logger.info("Ensuring database tables exist...")
         Infrastructure::Database::ConnectionManager.with_connection do |conn|
           conn.exec(<<-SQL)
             CREATE TABLE IF NOT EXISTS products (
@@ -102,7 +102,7 @@ module Infrastructure
             );
           SQL
         end
-        Infrastructure::Logger.logger.info("Database tables ready")
+        Infrastructure::Services::LoggerService.logger.info("Database tables ready")
       end
 
       def map_result_to_product(row)

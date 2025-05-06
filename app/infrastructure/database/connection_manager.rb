@@ -2,9 +2,8 @@
 require 'sorbet-runtime'
 require 'connection_pool'
 require 'pg'
-require_relative '../logger'
 require_relative '../config/database_config'
-
+require_relative '../services/logger_service'
 module Infrastructure
   module Database
     class ConnectionManager
@@ -20,7 +19,7 @@ module Infrastructure
             block.call(conn)
           end
         rescue PG::Error => e
-          Infrastructure::Logger.logger.error("Database error: #{e.message}")
+          Infrastructure::Services::LoggerService.logger.error("Database error: #{e.message}")
           raise
         end
 

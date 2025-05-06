@@ -1,4 +1,5 @@
 # typed: true
+
 module Domain
   module Models
     class User

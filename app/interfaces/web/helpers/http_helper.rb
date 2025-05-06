@@ -11,6 +11,10 @@ module Interfaces
           [status, json_content_type, [body.to_json]]
         end
 
+        def self.status_only(status)
+          [status, {}, []]
+        end
+
         def self.error_response(status, message)
           json_response(status, { error: message })
         end
@@ -35,8 +39,12 @@ module Interfaces
           error_response(500, message)
         end
 
+        def self.accepted
+          status_only(202)
+        end
+
         def self.created(body)
-          json_response(202, body)
+          json_response(201, body)
         end
 
         def self.ok(body)

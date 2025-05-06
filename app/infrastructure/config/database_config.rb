@@ -1,5 +1,5 @@
 # typed: true
-require_relative '../logger'
+require_relative '../services/logger_service'
 
 module Infrastructure
   module Config
@@ -15,9 +15,9 @@ module Infrastructure
       end
 
       def self.log_connection_info
-        Infrastructure::Logger.logger.info("Database: #{ENV['POSTGRES_DB']}")
-        Infrastructure::Logger.logger.info("Host: #{ENV['POSTGRES_HOST']}:#{ENV['POSTGRES_PORT']}")
-        Infrastructure::Logger.logger.info("User: #{ENV['POSTGRES_USER']}")
+        Infrastructure::Services::LoggerService.logger.info("Database: #{ENV['POSTGRES_DB']}")
+        Infrastructure::Services::LoggerService.logger.info("Host: #{ENV['POSTGRES_HOST']}:#{ENV['POSTGRES_PORT']}")
+        Infrastructure::Services::LoggerService.logger.info("User: #{ENV['POSTGRES_USER']}")
       end
     end
   end
