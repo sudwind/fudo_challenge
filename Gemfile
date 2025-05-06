@@ -16,3 +16,11 @@ gem 'puma', '~> 6.6.0'
 
 gem 'sorbet-static-and-runtime'
 gem 'tapioca', require: false, :group => [:development, :test]
+
+group :test do
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'factory_bot'
+  gem 'faker'
+  gem 'database_cleaner-active_record'
+end
