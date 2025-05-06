@@ -6,7 +6,7 @@ module Infrastructure
     class DatabaseConfig
       def self.connection_params
         {
-          dbname: ENV['POSTGRES_DB'] || 'products',
+          dbname: ENV['POSTGRES_DB'] || 'postgres',
           user: ENV['POSTGRES_USER'] || 'postgres',
           password: ENV['POSTGRES_PASSWORD'] || 'postgres',
           host: ENV['POSTGRES_HOST'] || 'localhost',
