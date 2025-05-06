@@ -45,7 +45,7 @@ module Interfaces
           Helpers::HttpHelper.ok(result)
         rescue PG::InvalidTextRepresentation
           Helpers::HttpHelper.bad_request('Invalid product ID format')
-        rescue => e
+        rescue => _e
           Helpers::HttpHelper.server_error('An unexpected error occurred')
         end
 
