@@ -23,7 +23,7 @@ module Interfaces
           if result[:error]
             Helpers::HttpHelper.bad_request(result[:error])
           else
-            Helpers::HttpHelper.created(result)
+            Helpers::HttpHelper.accepted(result)
           end
         rescue JSON::ParserError
           Helpers::HttpHelper.bad_request
@@ -34,12 +34,7 @@ module Interfaces
         def search(env)
           query = Rack::Utils.parse_query(env['QUERY_STRING'])['q']
           result = @search_products_use_case.execute(query: query)
-
-          if result[:error]
-            Helpers::HttpHelper.bad_request(result[:error])
-          else
-            Helpers::HttpHelper.ok(result)
-          end
+          Helpers::HttpHelper.ok(result)
         rescue => e
           Helpers::HttpHelper.server_error(e.message)
         end
@@ -47,19 +42,18 @@ module Interfaces
         def find(env)
           id = env['PATH_INFO'].split('/').last
           result = @find_product_use_case.execute(id: id)
-
-          if result[:error]
-            Helpers::HttpHelper.not_found
-          else
-            Helpers::HttpHelper.ok(result)
-          end
+          Helpers::HttpHelper.ok(result)
+        rescue PG::InvalidTextRepresentation
+          Helpers::HttpHelper.bad_request('Invalid product ID format')
         rescue => e
-          Helpers::HttpHelper.server_error(e.message)
+          Helpers::HttpHelper.server_error('An unexpected error occurred')
         end
 
-        def index(env)
+        def index(_env)
           result = @list_products_use_case.execute
           Helpers::HttpHelper.ok(result)
+        rescue => e
+          Helpers::HttpHelper.server_error(e.message)
         end
 
         def call(env)

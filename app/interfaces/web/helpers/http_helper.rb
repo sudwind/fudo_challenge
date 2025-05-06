@@ -36,7 +36,7 @@ module Interfaces
         end
 
         def self.created(body)
-          json_response(201, body)
+          json_response(202, body)
         end
 
         def self.ok(body)
