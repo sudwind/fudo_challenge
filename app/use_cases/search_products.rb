@@ -5,12 +5,9 @@ module UseCases
       @repository = repository
     end
 
-    def execute(query = nil)
-      if query.nil? || query.empty?
-        @repository.all_products
-      else
-        @repository.search_products(query)
-      end
+    def execute(query:)
+      products = @repository.search_products(query)
+      { products: products.map(&:to_h) }
     end
   end
 end 
