@@ -3,10 +3,12 @@ module Interfaces
   module Web
     module Helpers
       module HttpHelper
-        JSON_CONTENT_TYPE = { 'content-type' => 'application/json' }.freeze
+        def self.json_content_type
+          { 'content-type' => 'application/json' }
+        end
 
         def self.json_response(status, body)
-          [status, JSON_CONTENT_TYPE, [body.to_json]]
+          [status, json_content_type, [body.to_json]]
         end
 
         def self.error_response(status, message)
