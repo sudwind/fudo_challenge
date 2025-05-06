@@ -1,9 +1,10 @@
 # typed: true
 require 'json'
+require_relative '../infrastructure/services/logger_service'
 
 module Services
   class ParseUtils
-    UUID_PATTERN = %r{^/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$}
+    UUID_PATTERN = %r{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}
 
     def self.parse_json(body)
       JSON.parse(body)

@@ -1,7 +1,7 @@
 require_relative '../spec_helper'
 
-RSpec.describe UseCases::ListProducts do
-  let(:repository) { instance_double('PostgresRepository') }
+RSpec.describe Domain::UseCases::ListProducts do
+  let(:repository) { instance_double('Infrastructure::Repositories::PostgresRepository') }
   let(:use_case) { described_class.new(repository) }
 
   describe '#execute' do

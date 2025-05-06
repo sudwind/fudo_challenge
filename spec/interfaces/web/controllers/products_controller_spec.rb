@@ -1,10 +1,10 @@
 require_relative '../../../spec_helper'
 
 RSpec.describe Interfaces::Web::Controllers::ProductsController do
-  let(:create_product_use_case) { instance_double('UseCases::CreateProduct') }
-  let(:search_products_use_case) { instance_double('UseCases::SearchProducts') }
-  let(:find_product_use_case) { instance_double('UseCases::FindProduct') }
-  let(:list_products_use_case) { instance_double('UseCases::ListProducts') }
+  let(:create_product_use_case) { instance_double('Domain::UseCases::CreateProduct') }
+  let(:search_products_use_case) { instance_double('Domain::UseCases::SearchProducts') }
+  let(:find_product_use_case) { instance_double('Domain::UseCases::FindProduct') }
+  let(:list_products_use_case) { instance_double('Domain::UseCases::ListProducts') }
   let(:controller) do
     described_class.new(
       create_product_use_case,
@@ -94,20 +94,24 @@ RSpec.describe Interfaces::Web::Controllers::ProductsController do
     let(:product_id) { '123e4567-e89b-12d3-a456-426614174000' }
     let(:product) do
       {
-        'id' => product_id,
-        'name' => 'Product 1'
+        'product' => {
+          'id' => product_id,
+          'name' => 'Product 1'
+        }
       }
     end
 
     before do
       allow(find_product_use_case).to receive(:execute).and_return({
-        id: product_id,
-        name: 'Product 1'
+        product: {
+          id: product_id,
+          name: 'Product 1'
+        }
       })
     end
 
     it 'returns the product' do
-      env = Rack::MockRequest.env_for("/#{product_id}", method: 'GET')
+      env = Rack::MockRequest.env_for('/', method: 'GET', 'PATH_INFO' => "/#{product_id}")
       response = controller.call(env)
 
       expect(response[0]).to eq(200)
