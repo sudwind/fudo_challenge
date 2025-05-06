@@ -11,10 +11,10 @@ require 'stringio'
 require_relative 'app/domain/models/product'
 require_relative 'app/domain/models/user'
 require_relative 'app/domain/repositories/repository'
-require_relative 'app/application/use_cases/create_product'
-require_relative 'app/application/use_cases/search_products'
-require_relative 'app/application/use_cases/create_user'
-require_relative 'app/application/use_cases/user_login'
+require_relative 'app/use_cases/create_product'
+require_relative 'app/use_cases/search_products'
+require_relative 'app/use_cases/create_user'
+require_relative 'app/use_cases/user_login'
 require_relative 'app/infrastructure/repositories/in_memory_repository'
 require_relative 'app/infrastructure/repositories/postgres_repository'
 require_relative 'app/infrastructure/repositories/repository_factory'
@@ -31,10 +31,10 @@ require_relative 'app/infrastructure/logger'
 repository = Infrastructure::Repositories::RepositoryFactory.create_repository
 
 # Initialize use cases
-create_product = Application::UseCases::CreateProduct.new(repository)
-search_products = Application::UseCases::SearchProducts.new(repository)
-create_user = Application::UseCases::CreateUser.new(repository)
-user_login = Application::UseCases::UserLogin.new(repository)
+create_product = UseCases::CreateProduct.new(repository)
+search_products = UseCases::SearchProducts.new(repository)
+create_user = UseCases::CreateUser.new(repository)
+user_login = UseCases::UserLogin.new(repository)
 
 # Initialize controllers
 products_controller = Interfaces::Web::Controllers::ProductsController.new(create_product, search_products)
