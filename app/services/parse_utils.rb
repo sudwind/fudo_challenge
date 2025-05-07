@@ -1,6 +1,5 @@
 # typed: true
 require 'json'
-require_relative '../infrastructure/services/logger_service'
 
 module Services
   class ParseUtils
