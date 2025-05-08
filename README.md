@@ -1,6 +1,9 @@
 ## fudo_challenge
 
+[README en español](./README_ES.md)
+
 A Ruby application implementing a product management system
+
 
 ## Overview
 
