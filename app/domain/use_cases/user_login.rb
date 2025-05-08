@@ -10,7 +10,6 @@ module Domain
       end
 
       def execute(email:, password:)
-        puts "Login in use case"
         user = @repository.find_user_by_email(email)
         return { error: 'Invalid credentials' } unless user
         
