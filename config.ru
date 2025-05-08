@@ -48,6 +48,10 @@ app = Rack::Builder.new do
     run openapi_controller
   end
 
+  map '/docs' do
+    run openapi_controller
+  end
+
   map '/AUTHORS' do
     run authors_controller
   end

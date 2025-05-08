@@ -16,8 +16,11 @@ module Services
     private
 
     def handle_get_request(env)
-      if env['SCRIPT_NAME'] == '/openapi.yaml'
+      case env['SCRIPT_NAME']
+      when '/openapi.yaml'
         serve_specification
+      when '/docs'
+        serve_swagger_ui
       else
         Interfaces::Web::Helpers::HttpHelper.not_found
       end
@@ -32,6 +35,17 @@ module Services
         'expires' => '0'
       }
       [200, headers, [spec.to_yaml]]
+    end
+
+    def serve_swagger_ui
+      html = File.read('app/static/swagger-ui.html')
+      headers = {
+        'content-type' => 'text/html',
+        'cache-control' => 'no-store, no-cache, must-revalidate, max-age=0',
+        'pragma' => 'no-cache',
+        'expires' => '0'
+      }
+      [200, headers, [html]]
     end
   end
 end 
