@@ -42,7 +42,6 @@ authors_controller = Interfaces::Web::Controllers::AuthorsController.new
 
 # Define routes
 app = Rack::Builder.new do
-  use Rack::CommonLogger, Infrastructure::Services::LoggerService.logger
   use Infrastructure::Middleware::Compression
 
   map '/openapi.yaml' do
